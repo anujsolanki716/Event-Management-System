@@ -1,0 +1,6 @@
+{
+  "name": "EventSphere AI",
+  "description": "An AI-powered event management platform to create, discover, and engage with events. This application uses Gemini to generate event ideas, descriptions, and power interactive features like attendee discussions.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
