@@ -41,7 +41,7 @@ This is the backend server of the project, built using **Node.js**, **Express.js
 
 # 🎉 EventsHyScaler
 
-**EventsHyScaler** is a full-stack web application that enables users to **discover**, **create**, and **engage** with events. It uses **Google Gemini API** for AI-powered event generation, description crafting, and intelligent chat interactions.
+**EventsHyScaler** is a full-stack web application that enables users to **discover**, **create**, and **engage** with events.
 
 The app is built using:
 - **Frontend**: React + TypeScript + Tailwind CSS
@@ -64,7 +64,7 @@ The app is built using:
 
 ### Backend
 
-- 🧠 **AI Integration** – Descriptions, and AI chat via Gemini.
+- 🧠 **AI Integration** – Descriptions.
 - 🗃️ **MongoDB Database** – Stores user, event, and booking information.
 - 🛠️ **REST API** – Full CRUD API to support all event and user operations.
 - 🔐 **JWT Auth** – Secured routes using JSON Web Tokens.
