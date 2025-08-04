@@ -15,8 +15,10 @@ const CreateEventPage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('0');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
+  // const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
+
 
 
   if (!currentUser) {
@@ -58,8 +60,11 @@ const CreateEventPage: React.FC = () => {
       date,
       time,
       location,
-      imageUrl: `https://picsum.photos/seed/${title.replace(/\s/g, '-')}/1200/600`,
-      tickets: [{ type: 'General Admission', price: parseFloat(price) }]
+      imageUrl: imageUrl.trim() !== '' 
+        ? imageUrl.trim() 
+        : `https://picsum.photos/seed/${title.replace(/\s/g, '-')}/1200/600`,
+
+      tickets: [{ type: 'General', price: parseFloat(price) }]
     });
     if (newEvent) {
       navigate(`/event/${newEvent._id}`);
@@ -70,6 +75,17 @@ const CreateEventPage: React.FC = () => {
     <div className="max-w-4xl mx-auto bg-slate-800 p-8 rounded-lg shadow-xl">
       <h1 className="text-3xl font-bold text-white mb-6">Create a New Event</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="imageUrl" className="block text-sm font-medium text-slate-300">Image URL (optional)</label>
+          <input
+            type="text"
+            id="imageUrl"
+            value={imageUrl}
+            onChange={e => setImageUrl(e.target.value)}
+            placeholder="https://example.com/your-image.jpg"
+            className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500"
+          />
+        </div>
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-slate-300">Event Title</label>
           <input type="text" id="title" value={title} onChange={e => setTitle(e.target.value)} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500" required />

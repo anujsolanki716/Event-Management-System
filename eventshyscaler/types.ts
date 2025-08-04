@@ -37,6 +37,6 @@ export interface Comment {
 }
 
 export interface Ticket {
-  type: 'General Price' | 'VIP';
+  type: 'General' | 'VIP';
   price: number;
 }
