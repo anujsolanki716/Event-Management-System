@@ -18,6 +18,8 @@ const CreateEventPage: React.FC = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageSource, setImageSource] = useState<'url' | 'upload'>('url');
+
 
 
 
@@ -58,10 +60,9 @@ const CreateEventPage: React.FC = () => {
 
     let finalImageUrl = '';
 
-    if (uploadedImage) {
-      // Simulate image upload or use local preview URL
+    if (imageSource === 'upload' && uploadedImage) {
       finalImageUrl = imagePreview || '';
-    } else if (imageUrl.trim() !== '') {
+    } else if (imageSource === 'url' && imageUrl.trim() !== '') {
       finalImageUrl = imageUrl.trim();
     } else {
       finalImageUrl = `https://picsum.photos/seed/${title.replace(/\s/g, '-')}/1200/600`;
@@ -87,31 +88,62 @@ const CreateEventPage: React.FC = () => {
       <h1 className="text-3xl font-bold text-white mb-6">Create a New Event</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-slate-300">Upload Image (optional)</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setUploadedImage(file);
-                setImagePreview(URL.createObjectURL(file));
-              }
-            }}
-            className="mt-1 block w-full text-slate-300 bg-slate-700 border-slate-600 rounded-md py-2 px-3"
-          />
-      </div>
-        <div>
-          <label htmlFor="imageUrl" className="block text-sm font-medium text-slate-300">Image URL (optional)</label>
-          <input
-            type="text"
-            id="imageUrl"
-            value={imageUrl}
-            onChange={e => setImageUrl(e.target.value)}
-            placeholder="https://example.com/your-image.jpg"
-            className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500"
-          />
+          <label className="block text-sm font-medium text-slate-300 mb-1">Image Source</label>
+          <div className="flex gap-6 text-slate-300">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="imageSource"
+                value="url"
+                checked={imageSource === 'url'}
+                onChange={() => setImageSource('url')}
+                className="accent-sky-500"
+              />
+              Use Image URL
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="imageSource"
+                value="upload"
+                checked={imageSource === 'upload'}
+                onChange={() => setImageSource('upload')}
+                className="accent-sky-500"
+              />
+              Upload Image
+            </label>
+          </div>
         </div>
+        {imageSource === 'url' ? (
+          <div className="mt-4">
+            <label htmlFor="imageUrl" className="block text-sm font-medium text-slate-300">Image URL</label>
+            <input
+              type="text"
+              id="imageUrl"
+              value={imageUrl}
+              onChange={e => setImageUrl(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500"
+            />
+          </div>
+        ) : (
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-slate-300">Upload Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setUploadedImage(file);
+                  setImagePreview(URL.createObjectURL(file));
+                }
+              }}
+              className="mt-1 block w-full text-slate-300 bg-slate-700 border-slate-600 rounded-md py-2 px-3"
+            />
+          </div>
+        )}
+
 
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-slate-300">Event Title</label>
