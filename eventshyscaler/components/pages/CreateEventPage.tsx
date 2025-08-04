@@ -15,9 +15,10 @@ const CreateEventPage: React.FC = () => {
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('0');
   const [isGenerating, setIsGenerating] = useState(false);
-  // const [image, setImage] = useState<File | null>(null);
-  // const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
 
 
 
@@ -54,16 +55,26 @@ const CreateEventPage: React.FC = () => {
         toast.error("Please fill in all required fields.");
         return;
     }
+
+    let finalImageUrl = '';
+
+    if (uploadedImage) {
+      // Simulate image upload or use local preview URL
+      finalImageUrl = imagePreview || '';
+    } else if (imageUrl.trim() !== '') {
+      finalImageUrl = imageUrl.trim();
+    } else {
+      finalImageUrl = `https://picsum.photos/seed/${title.replace(/\s/g, '-')}/1200/600`;
+    }
+
+
     const newEvent = await addEvent({
       title,
       description,
       date,
       time,
       location,
-      imageUrl: imageUrl.trim() !== '' 
-        ? imageUrl.trim() 
-        : `https://picsum.photos/seed/${title.replace(/\s/g, '-')}/1200/600`,
-
+      imageUrl: finalImageUrl,
       tickets: [{ type: 'General', price: parseFloat(price) }]
     });
     if (newEvent) {
@@ -76,6 +87,21 @@ const CreateEventPage: React.FC = () => {
       <h1 className="text-3xl font-bold text-white mb-6">Create a New Event</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
+          <label className="block text-sm font-medium text-slate-300">Upload Image (optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setUploadedImage(file);
+                setImagePreview(URL.createObjectURL(file));
+              }
+            }}
+            className="mt-1 block w-full text-slate-300 bg-slate-700 border-slate-600 rounded-md py-2 px-3"
+          />
+      </div>
+        <div>
           <label htmlFor="imageUrl" className="block text-sm font-medium text-slate-300">Image URL (optional)</label>
           <input
             type="text"
@@ -86,10 +112,12 @@ const CreateEventPage: React.FC = () => {
             className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
+
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-slate-300">Event Title</label>
           <input type="text" id="title" value={title} onChange={e => setTitle(e.target.value)} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500" required />
         </div>
+
         
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-slate-300">Description</label>
